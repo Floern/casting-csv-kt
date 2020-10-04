@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.4.10"
 }
 
-group = "com.floern.csv"
+group = "com.floern.castingcsv"
 version = "1.0"
 
 kotlin {
