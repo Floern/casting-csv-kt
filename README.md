@@ -1,19 +1,20 @@
 # Casting CSV
 
-A simple Kotlin library to read and write CSV directly from and to data classes.
+A simple Kotlin library to read and write CSV directly from and to data classes with a single line of code.
+
+![Release](https://img.shields.io/bintray/v/floern/maven/casting-csv-kt?label=release)
+![CI](https://img.shields.io/github/workflow/status/Floern/casting-csv-kt/CI/main?label=ci)
 
 ## Usage
 
-<!--
 ### Dependency
 
 The library artifact is available on JCenter.
 
-Gradle (Kotlin DSL):
+Gradle:
 ```kotlin
-implementation("com.floern.castingcsv:castingcsv-kt:1.0")
+implementation "com.floern.castingcsv:casting-csv-kt:1.0"
 ```
--->
 
 ### Example preliminaries
 
@@ -94,6 +95,14 @@ you can specify a header list with using the `header` parameter, e.g.:
 ```kotlin
 val csv = CastingCSV.create().toCSV(data, header = listOf("sender", "receiver", "amount"))
 ```
+
+You can also write to an `OutputStream`:
+```kotlin
+val outputStream = csvFile.outputStream()
+CastingCSV.create().toCSV(data, outputStream)
+```
+
+And if you have to write a large amount of CSV you can use `toCSV()` with a sequence.
 
 ### Customized CSV configuration
 

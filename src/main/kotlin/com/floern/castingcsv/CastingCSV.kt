@@ -8,11 +8,21 @@ import java.io.InputStream
 import java.io.OutputStream
 import kotlin.reflect.KClass
 
-/**
- * TODO: quick usage docs here...
- */
 public class CastingCSV private constructor(private val csvConfig: CsvConfig) {
 
+	/**
+	 * Read and write CSV directly from and to data classes with a single line of code.
+	 *
+	 * Read CSV:
+	 *
+	 * `val list = CastingCSV.create().fromCSV<MyRecord>(csv)`
+	 *
+	 * Write CSV:
+	 *
+	 * `val csv = CastingCSV.create().toCSV(list)`
+	 * or
+	 * `CastingCSV.create().toCSV(data, outputStream)`
+	 */
 	public companion object {
 
 		/**
