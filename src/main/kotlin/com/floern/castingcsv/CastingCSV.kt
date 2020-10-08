@@ -156,3 +156,21 @@ public class CastingCSV private constructor(private val csvConfig: CsvConfig) {
 	}
 
 }
+
+
+/**
+ * Read and write CSV directly from and to data classes with a single line of code.
+ *
+ * Read CSV:
+ *
+ * `val list = castingCSV().fromCSV<MyRecord>(csv)`
+ *
+ * Write CSV:
+ *
+ * `val csv = castingCSV().toCSV(list)`
+ * or
+ * `castingCSV().toCSV(data, outputStream)`
+ *
+ * @param config (optional) custom configuration for the CSV reader and writer.
+ */
+public fun castingCSV(config: CsvConfig.() -> Unit = {}): CastingCSV = CastingCSV.create(config)
