@@ -41,6 +41,7 @@ private inline fun <T : Any> createTypeAdapter(
 	}
 }
 
-internal fun getTypeAdapter(type: KType): TypeAdapter<*> {
-	return defaultTypeAdapters[type] ?: error("Adapter for type '${type}' not found")
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun getDefaultTypeAdapter(type: KType): TypeAdapter<*>? {
+	return defaultTypeAdapters[type]
 }

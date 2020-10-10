@@ -1,6 +1,7 @@
 package com.floern.castingcsv.deserialization
 
 import com.floern.castingcsv.CsvConfig
+import com.floern.castingcsv.typeadapter.TypeAdapter
 import com.floern.castingcsv.typeadapter.getTypeAdapter
 import com.floern.castingcsv.utils.TYPE_STRING
 import com.floern.castingcsv.utils.findDuplicate
@@ -82,7 +83,8 @@ internal class Deserializer(private val csvConfig: CsvConfig) {
 				val token = tokens.getOrNull(index)
 				val value = token
 					?.takeIf { it != csvConfig.nullCode || deserializeEmptyTokenToNonnullString(parameter) }
-					?.runCatching { getTypeAdapter(parameter.type).deserialize(this) }
+					?.run { T(this, getTypeAdapter(parameter.type, parameter)) }
+					?.runCatching { typeAdapter.deserialize(mToken) }
 					?.onFailure { e ->
 						throw CsvDeserializationException("Invalid value for field '${parameter.name}' on row ${row + 1}", e)
 					}
@@ -101,3 +103,9 @@ internal class Deserializer(private val csvConfig: CsvConfig) {
 	}
 
 }
+
+
+private data class T(
+	val mToken: String,
+	val typeAdapter: TypeAdapter<*>
+)

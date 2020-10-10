@@ -57,7 +57,7 @@ internal class Serializer(private val csvConfig: CsvConfig) {
 
 	private fun <T : Any> serializeElement(element: T, fields: List<KProperty1<T, *>>): List<String> {
 		return fields.map { property ->
-			getTypeAdapter(property.returnType).serializeAny(property.get(element)) ?: csvConfig.nullCode
+			getTypeAdapter(property.returnType, property).serializeAny(property.get(element)) ?: csvConfig.nullCode
 		}
 	}
 
