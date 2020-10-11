@@ -52,6 +52,8 @@ Claire sent $123 to Mary.
 anonymous sent $16 to Donald.
 ```
 
+Side note: An empty `sender` is interpreted as `null` and therefore replaced with "anonymous".
+
 ### Read CSV line by line
 
 If you have a huge CSV file that would cause memory issues if it's loaded into memory all at once, 
@@ -76,8 +78,8 @@ you can specify a header filter with the `header` parameter to read and map the 
 
 ```kotlin
 val data = listOf(
-	Transaction("Marc", "O'Polo", 65),
-	Transaction("George", "Ronald", 12)
+    Transaction("Marc", "O'Polo", 65),
+    Transaction("George", "Ronald", 12)
 )
 val csv = castingCSV().toCSV(data)
 print(csv)
@@ -91,9 +93,9 @@ George,Ronald,12
 ```
 
 If you want to specify the order of the CSV columns or only serialize a subset of the fields, 
-you can specify a header list with using the `header` parameter, e.g.:
+you can specify a header list using the `header` parameter, e.g.:
 ```kotlin
-val csv = castingCSV().toCSV(data, header = listOf("sender", "receiver", "amount"))
+val csv = castingCSV().toCSV(data, header = listOf("receiver", "amount"))
 ```
 
 You can also write to an `OutputStream`:
@@ -102,12 +104,12 @@ val outputStream = csvFile.outputStream()
 castingCSV().toCSV(data, outputStream)
 ```
 
-And if you have to write a large amount of CSV you can use `toCSV()` with a sequence.
+And if you have to write a large amount of CSV you can use `toCSV()` with a Sequence too.
 
-### Customized CSV configuration
+### Customized CSV options
 
-A `CastingCSV` instance can be created with custom CSV configurations:
-
+You can specify custom CSV configurations when creating a `CastingCSV` instance with the following options. 
+The example values shown also represent the default of each option:
 ```kotlin
 castingCSV {
     // Charset to be used for the encoding of the CSV file:
@@ -169,14 +171,15 @@ println(list.first().date) // Mon Oct 25 00:00:00 GMT 2021
 _Casting CSV_ uses [kotlin-csv by doyaaaaaken](https://github.com/doyaaaaaken/kotlin-csv) internally to read and write raw CSV.
 
 The CSV fields and data class properties are mapped with Kotlin reflection. 
-If you use Proguard make sure you add exclusion rules the data classes.
+If you use Proguard make sure to add exclusion rules for your data classes.
 
-For now only the JVM and Android is supported.
+For now only the JVM platform (including Android) is supported.
 
 ### Contributing
 
-Feel free to open issues and feature requests. You can also create a pull request for small fixes. 
+Feel free to [open issues and feature requests](https://github.com/Floern/casting-csv-kt/issues). 
+You can also [create pull requests](https://github.com/Floern/casting-csv-kt/pulls) for bug fixes. 
 
 ### License
 
-This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+_Casting CSV_ is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
