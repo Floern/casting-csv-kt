@@ -3,6 +3,10 @@ package com.floern.castingcsv.typeadapter
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
+internal fun getDefaultTypeAdapter(type: KType): TypeAdapter<*>? {
+	return defaultTypeAdapters[type]
+}
+
 private val StringAdapter: TypeAdapter<String> = createTypeAdapter({ it }, { it })
 private val ByteAdapter: TypeAdapter<Byte> = createTypeAdapter(String::toByte)
 private val ShortAdapter: TypeAdapter<Short> = createTypeAdapter(String::toShort)
@@ -39,8 +43,4 @@ private inline fun <T : Any> createTypeAdapter(
 		override fun deserialize(token: String): T? = deserializeImpl(token)
 		override fun serialize(value: T?): String? = serializeImpl(value)
 	}
-}
-
-internal fun getTypeAdapter(type: KType): TypeAdapter<*> {
-	return defaultTypeAdapters[type] ?: error("Adapter for type '${type}' not found")
 }

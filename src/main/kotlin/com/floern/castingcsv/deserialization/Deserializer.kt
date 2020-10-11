@@ -2,6 +2,7 @@ package com.floern.castingcsv.deserialization
 
 import com.floern.castingcsv.CsvConfig
 import com.floern.castingcsv.typeadapter.getTypeAdapter
+import com.floern.castingcsv.utils.DeserializableField
 import com.floern.castingcsv.utils.TYPE_STRING
 import com.floern.castingcsv.utils.findDuplicate
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
@@ -44,13 +45,13 @@ internal class Deserializer(private val csvConfig: CsvConfig) {
 				throw CsvDeserializationException("Duplicate header '$it'")
 			}
 
-			val parameterToColumn = mapParameterToColumnIndices(primaryConstructor.parameters, headerNames)
+			val fields = getDeserializableFields(primaryConstructor.parameters, headerNames)
 
 			val sequence = readAllAsSequence().mapIndexed { row, tokens ->
 				deserializeElement(
 					tokens,
 					primaryConstructor,
-					parameterToColumn,
+					fields,
 					row
 				)
 			}
@@ -58,39 +59,45 @@ internal class Deserializer(private val csvConfig: CsvConfig) {
 		}
 	}
 
-	private fun mapParameterToColumnIndices(parameters: List<KParameter>, headerNames: List<String>): Map<KParameter, Int> {
+	private fun getDeserializableFields(
+		parameters: List<KParameter>,
+		headerNames: List<String>
+	): List<DeserializableField> {
 		return parameters
-			.associateWith { parameter ->
-				headerNames.indexOf(parameter.name)
+			.map { parameter ->
+				DeserializableField(
+					parameter,
+					headerNames.indexOf(parameter.name),
+					getTypeAdapter(parameter.type, parameter)
+				)
 			}
-			.onEach { (parameter, index) ->
-				if (index < 0 && !parameter.isOptional) {
-					throw CsvDeserializationException("Required field '${parameter.name}' not found in CSV header")
+			.onEach { field ->
+				if (field.columnIndex < 0 && !field.parameter.isOptional) {
+					throw CsvDeserializationException("Required field '${field.name}' not found in CSV header")
 				}
 			}
-			.filter { (_, index) -> index >= 0 }
+			.filter { it.columnIndex >= 0 }
 	}
 
 	private fun <T : Any> deserializeElement(
 		tokens: List<String>,
 		constructor: KFunction<T>,
-		parameterToColumn: Map<KParameter, Int>,
+		fields: List<DeserializableField>,
 		row: Int
 	): T {
 		return constructor.callBy(
-			parameterToColumn.mapValues { (parameter, index) ->
-				val token = tokens.getOrNull(index)
-				val value = token
-					?.takeIf { it != csvConfig.nullCode || deserializeEmptyTokenToNonnullString(parameter) }
-					?.runCatching { getTypeAdapter(parameter.type).deserialize(this) }
+			fields.associateBy({ field -> field.parameter }) { field ->
+				val value = tokens.getOrNull(field.columnIndex)
+					?.takeIf { it != csvConfig.nullCode || deserializeEmptyTokenToNonnullString(field.parameter) }
+					?.runCatching { field.typeAdapter.deserialize(this) }
 					?.onFailure { e ->
-						throw CsvDeserializationException("Invalid value for field '${parameter.name}' on row ${row + 1}", e)
+						throw CsvDeserializationException("Invalid value for field '${field.name}' on row ${row + 1}", e)
 					}
 					?.getOrNull()
-				if (value == null && !parameter.type.isMarkedNullable) {
-					throw CsvDeserializationException("Missing value for field '${parameter.name}' on row ${row + 1}")
+				if (value == null && !field.type.isMarkedNullable) {
+					throw CsvDeserializationException("Missing value for field '${field.name}' on row ${row + 1}")
 				}
-				return@mapValues value
+				return@associateBy value
 			}
 		)
 	}

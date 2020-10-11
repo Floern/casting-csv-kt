@@ -135,10 +135,32 @@ CastingCSV.create {
 
 ### Supported types
 
-The following field types, non-null and nullable, are supported: 
+The following field types, non-null and nullable, are natively supported: 
 `String`, `Int`, `Long`, `Byte`, `Short`, `Float`, `Double`, `Boolean`
 
-We are working on custom type adapters to support more built-in and user-defined types.
+### Custom type adapters
+
+Any other type can be supported by implementing a custom `TypeAdapter`. 
+As shown in the following example we can serialize and deserialize a `Date` by creating a `DateAdapter` 
+and linking it with the property of type `Date` using the `@CsvTypeAdapter` annotation:
+```kotlin
+// custom type adapter for Date
+class DateAdapter : TypeAdapter<Date>() {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    override fun serialize(value: Date?): String? = value?.let { dateFormat.format(it) }
+    override fun deserialize(token: String): Date? = dateFormat.parse(token)
+}
+
+// data class
+data class Transaction(
+    @CsvTypeAdapter(DateAdapter::class)
+    val date: Date
+)
+
+// parsing CSV
+val list = CastingCSV.create().fromCSV<Transaction>("date\n2021-10-25")
+println(list.first().date) // Mon Oct 25 00:00:00 GMT 2021
+```
 
 ## Appendix
 
