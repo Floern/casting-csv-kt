@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val artifactGroup = "com.floern.castingcsv"
 val artifactName = "casting-csv-kt"
-val artifactVersion = "1.0"
+val artifactVersion = "1.1"
 val publicationName = "release"
 
 buildscript {

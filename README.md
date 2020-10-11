@@ -13,7 +13,7 @@ The library artifact is available on JCenter.
 
 Gradle:
 ```kotlin
-implementation "com.floern.castingcsv:casting-csv-kt:1.0"
+implementation "com.floern.castingcsv:casting-csv-kt:1.1"
 ```
 
 ### Example preliminaries
