@@ -28,4 +28,15 @@ class WriteCsvExceptionTests {
 		Assert.fail()
 	}
 
+	@Test(expected = IllegalArgumentException::class)
+	fun toCsvNoDataClass() {
+		class DataClass(val a: String)
+
+		val list = listOf(DataClass("x"))
+
+		CastingCSV.create().toCSV(list, listOf("a", "a"))
+
+		Assert.fail()
+	}
+
 }

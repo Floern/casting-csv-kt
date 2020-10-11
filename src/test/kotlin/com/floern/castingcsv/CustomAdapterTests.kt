@@ -12,7 +12,7 @@ class CustomAdapterTests {
 	class DateAdapter : TypeAdapter<Date>() {
 		val format = SimpleDateFormat("yyyy-MM-dd")
 		override fun serialize(value: Date?): String? = value?.let { format.format(it) }
-		override fun deserialize(token: String): Date? = token.takeIf { it.isNotBlank() }.let { format.parse(it) }
+		override fun deserialize(token: String): Date? = format.parse(token)
 	}
 
 	data class DateClass(
@@ -58,6 +58,18 @@ class CustomAdapterTests {
 	fun incompatibleTypeAdapter() {
 		data class DataClass(
 			@CsvTypeAdapter(DateAdapter::class)
+			val a: String
+		)
+
+		CastingCSV.create().fromCSV<DataClass>("a\nx")
+
+		Assert.fail()
+	}
+
+	@Test(expected = IllegalArgumentException::class)
+	fun invalidClassTypeAdapter() {
+		data class DataClass(
+			@CsvTypeAdapter(TypeAdapter::class)
 			val a: String
 		)
 
