@@ -158,7 +158,7 @@ data class Transaction(
 )
 
 // parsing CSV
-val list = CastingCSV.create().fromCSV<Transaction>("date\n2021-10-25")
+val list = castingCSV().fromCSV<Transaction>("date\n2021-10-25")
 println(list.first().date) // Mon Oct 25 00:00:00 GMT 2021
 ```
 
