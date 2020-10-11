@@ -4,6 +4,7 @@ import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.withNullability
 
 internal fun getTypeAdapter(type: KType, element: KAnnotatedElement): TypeAdapter<*> {
@@ -11,12 +12,10 @@ internal fun getTypeAdapter(type: KType, element: KAnnotatedElement): TypeAdapte
 }
 
 private fun findCustomTypeAdapter(type: KType, element: KAnnotatedElement): TypeAdapter<*>? {
-	return element.annotations
-		.find { it is CsvTypeAdapter }
-		.let { it as CsvTypeAdapter? }
+	return element.findAnnotation<CsvTypeAdapter>()
 		?.typeAdapterClass?.let { typeAdapterClass ->
 			typeAdapterClass.runCatching { createInstance() }
-				.getOrElse { cause -> failedTypeAdapterInit(typeAdapterClass, cause) }
+				.getOrElse { cause -> failedTypeAdapterInstantiation(typeAdapterClass, cause) }
 		}
 		?.also { typeAdapter ->
 			ensureTypeMatch(typeAdapter, type)
@@ -30,6 +29,6 @@ private fun ensureTypeMatch(typeAdapter: TypeAdapter<*>, type: KType) {
 }
 
 @Suppress("NOTHING_TO_INLINE")
-private inline fun failedTypeAdapterInit(kClass: KClass<*>, cause: Throwable): Nothing {
+private inline fun failedTypeAdapterInstantiation(kClass: KClass<*>, cause: Throwable): Nothing {
 	throw IllegalArgumentException("Cannot create instance of TypeAdapter '${kClass.simpleName}'", cause)
 }

@@ -16,8 +16,7 @@ class CustomAdapterTests {
 	}
 
 	data class DateClass(
-		@param:CsvTypeAdapter(DateAdapter::class)
-		@property:CsvTypeAdapter(DateAdapter::class)
+		@CsvTypeAdapter(DateAdapter::class)
 		val a: Date
 	)
 
@@ -37,11 +36,28 @@ class CustomAdapterTests {
 		Assert.assertEquals("a\r\n2020-10-28\r\n", csv)
 	}
 
+	@Test
+	fun overrideDefaultAdapter() {
+		class ReverseStringAdapter : TypeAdapter<String>() {
+			override fun serialize(value: String?): String? = value
+			override fun deserialize(token: String): String = token.reversed()
+		}
+
+		data class DataClass(
+			@CsvTypeAdapter(ReverseStringAdapter::class)
+			val a: String
+		)
+
+		val list = CastingCSV.create().fromCSV<DataClass>("a\nabcd")
+
+		Assert.assertEquals(1, list.size)
+		Assert.assertEquals("dcba", list[0].a)
+	}
+
 	@Test(expected = IllegalArgumentException::class)
 	fun incompatibleTypeAdapter() {
 		data class DataClass(
-			@param:CsvTypeAdapter(DateAdapter::class)
-			@property:CsvTypeAdapter(DateAdapter::class)
+			@CsvTypeAdapter(DateAdapter::class)
 			val a: String
 		)
 
