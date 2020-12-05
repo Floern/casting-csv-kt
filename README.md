@@ -168,7 +168,8 @@ println(list.first().date) // Mon Oct 25 00:00:00 GMT 2021
 
 ### Dependencies
 
-_Casting CSV_ uses [kotlin-csv by doyaaaaaken](https://github.com/doyaaaaaken/kotlin-csv) internally to read and write raw CSV.
+_Casting CSV_ uses [kotlin-csv by doyaaaaaken](https://github.com/doyaaaaaken/kotlin-csv) internally 
+to read and write raw CSV.
 
 The CSV fields and data class properties are mapped with Kotlin reflection. 
 If you use Proguard make sure to add exclusion rules for your data classes.
@@ -183,3 +184,9 @@ You can also [create pull requests](https://github.com/Floern/casting-csv-kt/pul
 ### License
 
 _Casting CSV_ is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+### Blog
+
+> [CSV in Kotlin with Casting CSV &ndash; floern.com;;](https://floern.com/;;/csv-with-kotlin/)  
+> <sup>Introduction and deep dive into Casting CSV, my open source Kotlin library to automagically read and 
+write CSV with a one-liner using Kotlin data classes and reflection.</sup>
