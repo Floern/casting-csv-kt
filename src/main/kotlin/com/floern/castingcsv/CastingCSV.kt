@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.charset.Charset
 import kotlin.reflect.KClass
 
 public class CastingCSV private constructor(private val csvConfig: CsvConfig) {
@@ -39,7 +40,7 @@ public class CastingCSV private constructor(private val csvConfig: CsvConfig) {
 	private val deserializer by lazy { Deserializer(csvConfig) }
 
 	@PublishedApi
-	internal val charset = csvConfig.charset
+	internal val charset: Charset = csvConfig.charset
 
 	/**
 	 * Read CSV to a list of objects.
