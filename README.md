@@ -188,5 +188,5 @@ _Casting CSV_ is licensed under the [Apache License 2.0](http://www.apache.org/l
 ### Blog
 
 > [CSV in Kotlin with Casting CSV &ndash; floern.com;;](https://floern.com/;;/csv-with-kotlin/)  
-> <sup>Introduction and deep dive into Casting CSV, my open source Kotlin library to automagically read and 
-write CSV with a one-liner using Kotlin data classes and reflection.</sup>
+> <small>Introduction and deep dive into Casting CSV, my open source Kotlin library to automagically read and 
+write CSV with a one-liner using Kotlin data classes and reflection.</small>
