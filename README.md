@@ -2,18 +2,18 @@
 
 A simple Kotlin library to read and write CSV directly from and to data classes with a single line of code.
 
-[![Release](https://img.shields.io/bintray/v/floern/maven/casting-csv-kt?label=release)](https://bintray.com/floern/maven/casting-csv-kt)
+[![Release](https://img.shields.io/maven-central/v/com.floern.castingcsv/casting-csv-kt?label=release)](https://bintray.com/floern/maven/casting-csv-kt)
 [![CI](https://img.shields.io/github/workflow/status/Floern/casting-csv-kt/CI/main?label=ci)](https://github.com/Floern/casting-csv-kt/actions?query=workflow%3ACI)
 
 ## Usage
 
 ### Dependency
 
-The library artifact is available on JCenter.
+The library artifact is available on Maven Central.
 
 Gradle:
 ```kotlin
-implementation "com.floern.castingcsv:casting-csv-kt:1.1"
+implementation "com.floern.castingcsv:casting-csv-kt:1.2"
 ```
 
 ### Example preliminaries
